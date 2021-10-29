@@ -133,8 +133,7 @@
           options.chart = { title: title },
             options.legend = { position: 'none' },
             options.bars = 'horizontal',
-            options.vAxis.maxValue = 0;
-          console.log(pivotData)
+            options.vAxis.maxValue = 0
         }
         if (chartType === 'Sankey') {
           let aggregator = pivotData.aggregatorName.toLowerCase()
@@ -171,8 +170,7 @@
           })
           dataTable.addRows(rowData)
           console.log(pivotData)
-          options.width = 600
-          console.log(options)
+          options.width = 800
         }
         else if (dataArray[0].length === 2 && dataArray[0][1] === '') {
           options.legend = {
@@ -183,12 +181,11 @@
         result = $('<div>').css({
           width: '100%',
           height: '100%'
-        });
+        })
         wrapper = new google.visualization.ChartWrapper({
           dataTable: dataTable,
           chartType: chartType,
-          options: options,
-          containerID: 'text'
+          options: options
         });
         wrapper.draw(result[0]);
         result.bind('dblclick', function () {
