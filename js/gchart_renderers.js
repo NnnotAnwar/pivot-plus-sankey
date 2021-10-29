@@ -131,7 +131,7 @@
         }
         if (chartType === 'Bar') {
           options.chart = { title: title },
-            options.legend = { position: 'none' },
+            options.legend = { position: 'absolute' },
             options.bars = 'horizontal',
             options.vAxis.maxValue = 0
         }

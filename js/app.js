@@ -9,6 +9,9 @@ $(function () {
         $('#content').pivotUI(
             data, {
             renderers: renderers,
+            derivedAttributes: {
+                "Age Bin": $.pivotUtilities.derivers.bin("Age", 10)
+            },
             rendererOptions: {
                 gchart: { width: 800, height: 600 }
             }
