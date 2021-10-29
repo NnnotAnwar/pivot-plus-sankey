@@ -142,16 +142,16 @@
           dataTable.addColumn('string', `To`)
           dataTable.addColumn('number', aggregator)
           let rowData = [];
-          for (const index in rowKeys) {
-            let rowItem = rowKeys[index]
-            for (let index in rowItem) {
-              rowItem[index] = String(rowItem[index])
+          for (let index in colKeys) {
+            let colItem = colKeys[index]
+            for (let index in colItem) {
+              colItem[index] = String(colItem[index])
             }
-            for (let index = 0; index < rowItem.length - 1; index++) {
-              let value = pivotData.rowTotals[`${rowItem.join('\u0000')}`].value()
-              let rowItemData = rowItem.slice(index, index + 2)
-              rowData.push(rowItemData)
-              rowItemData.push(value)
+            for (let index = 0; index < colItem.length - 1; index++) {
+              let value = pivotData.colTotals[`${colItem.join('\u0000')}`].value()
+              let colItemData = colItem.slice(index, index + 2)
+              rowData.push(colItemData)
+              colItemData.push(value)
             }
           }
           const values = {}
