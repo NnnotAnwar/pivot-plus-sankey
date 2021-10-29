@@ -169,7 +169,6 @@
             return [...s, item[1]]
           })
           dataTable.addRows(rowData)
-          console.log(pivotData)
           options.width = 800
         }
         else if (dataArray[0].length === 2 && dataArray[0][1] === '') {
