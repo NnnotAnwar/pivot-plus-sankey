@@ -1,5 +1,5 @@
 (function () {
-  var callWithJQuery;
+  let callWithJQuery;
 
   callWithJQuery = function (pivotModule) {
     if (typeof exports === "object" && typeof module === "object") {
@@ -11,7 +11,7 @@
     }
   };
   callWithJQuery(function ($, Plotly) {
-    var makePlotlyChart, makePlotlySankeyChart;
+    let makePlotlyChart, makePlotlySankeyChart;
     makePlotlyChart = function (traceOptions, layoutOptions, transpose) {
       if (traceOptions == null) {
         traceOptions = {};
@@ -23,7 +23,7 @@
         transpose = false;
       }
       return function (pivotData, opts) {
-        var colKeys, columns, d, data, datumKeys, defaults, fullAggName, groupByTitle, hAxisTitle, i, layout, result, rowKeys, rows, titleText, traceKeys;
+        let colKeys, columns, d, data, datumKeys, defaults, fullAggName, groupByTitle, hAxisTitle, i, layout, result, rowKeys, rows, titleText, traceKeys;
         defaults = {
           localeStrings: {
             vs: "с",
@@ -57,7 +57,7 @@
           fullAggName += "(" + (pivotData.valAttrs.join(", ")) + ")";
         }
         data = traceKeys.map(function (traceKey) {
-          var datumKey, j, labels, len, trace, val, values;
+          let datumKey, j, labels, len, trace, val, values;
           values = [];
           labels = [];
           for (j = 0, len = datumKeys.length; j < len; j++) {
@@ -136,7 +136,7 @@
     };
     makePlotlySankeyChart = function () {
       return function (pivotData, opts) {
-        var colKey, colKeys, data, defaults, j, k, layout, len, len1, renderArea, result, rowKey, rowKeys, v, label, value, sankey, sources, targets;
+        let colKey, colKeys, data, defaults, j, k, layout, len, len1, renderArea, result, rowKey, rowKeys, v, label, value, sankey, sources, targets;
         defaults = {
           localeStrings: {
             vs: "на",
@@ -163,40 +163,40 @@
         if (colKeys.length === 0) {
           colKeys.push([]);
         }
-        data = []
-        label = []
-        sources = []
-        targets = []
+        data = [];
+        label = [];
+        sources = [];
+        targets = [];
         for (let i = 0; i < rowKeys.length; i++) {
           rowKey = rowKeys[i];
-          let y_start = 1 / rowKeys.length * i
-          let y_end = 1 / rowKeys.length * (i + 1)
-          let y_gap = 1 / rowKeys.length / 10
-          let labelItem = []
-          let labelArray = []
-          let labelKeys = {}
-          value = []
+          let y_start = 1 / rowKeys.length * i;
+          let y_end = 1 / rowKeys.length * (i + 1);
+          let y_gap = 1 / rowKeys.length / 10;
+          let labelItem = [];
+          let labelArray = [];
+          let labelKeys = {};
+          value = [];
           for (let j = 0; j < colKeys.length; j++) {
-            label.push(rowKey)
-            colKey = colKeys[j]
-            labelItem = []
+            label.push(rowKey);
+            colKey = colKeys[j];
+            labelItem = [];
             if (rowKey.length > 0) { labelItem.push(String(rowKey)) }
             for (let colItem of colKey) {
-              labelItem.push(colItem)
-              label.push(colItem)
+              labelItem.push(colItem);
+              label.push(colItem);
             }
-            labelArray.push(labelItem)
-            value.push(pivotData.getAggregator(rowKey, colKey).value())
+            labelArray.push(labelItem);
+            value.push(pivotData.getAggregator(rowKey, colKey).value());
           }
-          labelItem = []
+          labelItem = [];
           for (let index = 0; index < labelArray.length; index++) {
-            let item = labelArray[index]
-            let val = value[index]
+            let item = labelArray[index];
+            let val = value[index];
             for (let index = 0; index < item.length; index++) {
-              let itemData = item.slice(index, index + 2)
+              let itemData = item.slice(index, index + 2);
               if (itemData.length == 2) {
-                itemData.push(val)
-                labelItem.push(itemData)
+                itemData.push(val);
+                labelItem.push(itemData);
               }
             }
           }
@@ -205,8 +205,8 @@
           labelItem.forEach(item => {
             const key = item[0] + separator + item[1];
             if (values[key] === undefined) {
-              values[key] = item[2]
-              return
+              values[key] = item[2];
+              return;
             };
             values[key] += item[2];
           });
@@ -214,19 +214,19 @@
             const s = item[0].split(separator);
             return [...s, item[1]];
           });
-          value = []
+          value = [];
           for (let item of labelItem) {
-            value.push(item[2])
+            value.push(item[2]);
           }
           for (let item of label) {
-            String(item)
-            labelKeys[`${item}`] = true
+            String(item);
+            labelKeys[`${item}`] = true;
           }
-          let rowData = Object.keys(labelKeys)
+          let rowData = Object.keys(labelKeys);
           for (let item of labelItem) {
-            item = item.slice(0, 2)
-            sources.push(rowData.indexOf(item[0]))
-            targets.push(rowData.indexOf(item[1]))
+            item = item.slice(0, 2);
+            sources.push(rowData.indexOf(item[0]));
+            targets.push(rowData.indexOf(item[1]));
           }
           sankey = {
             orientation: "h",
@@ -253,8 +253,8 @@
 
             type: 'sankey',
           }
-          data.push(sankey)
-          label = []
+          data.push(sankey);
+          label = [];
         }
         layout = {
           title: pivotData.aggregatorName + ' на ' + pivotData.rowAttrs.join("-") + ' с ' + pivotData.colAttrs.join("-"),
