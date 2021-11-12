@@ -272,7 +272,7 @@
         return result;
       };
     };
-    return $.pivotUtilities.plotly_renderers = {
+    return $.pivotUtilities.sankeyplus_renderers = {
       "Гистограмма": makePlotlyChart({
         type: 'bar'
       }, {
