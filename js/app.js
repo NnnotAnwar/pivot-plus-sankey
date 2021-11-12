@@ -1,5 +1,5 @@
 $(function () {
-    var renderers = $.extend($.pivotUtilities.renderers, $.pivotUtilities.plotly_renderers)
+    let renderers = $.extend($.pivotUtilities.renderers, $.pivotUtilities.plotly_renderers)
     // google.load('visualization', 'current', { packages: ['corechart', 'charteditor'] })
     // google.charts.load('current', { 'packages': ['corechart', 'bar', 'sankey'] });
     $.getJSON('data/customdata.json', function (data) {
