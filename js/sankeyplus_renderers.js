@@ -5,13 +5,13 @@
     if (typeof exports === "object" && typeof module === "object") {
       return pivotModule(require("jquery"), require("plotly.js"));
     } else if (typeof define === "function" && define.amd) {
-      return define(["jquery", "plotly.js"], pivotModule);
+      return define(['jquery', 'plotly.js'], pivotModule);
     } else {
       return pivotModule(jQuery, Plotly);
     }
   };
   callWithJQuery(function ($, Plotly) {
-    let makePlotlyChart, makePlotlySankeyChart;
+    let makePlotlyChart, makePlotlySankeyChart, makePlotlySankeyFlowChart;
     makePlotlyChart = function (traceOptions, layoutOptions, transpose) {
       if (traceOptions == null) {
         traceOptions = {};
@@ -136,7 +136,7 @@
     };
     makePlotlySankeyChart = function () {
       return function (pivotData, opts) {
-        let colKey, colKeys, data, defaults, j, k, layout, len, len1, renderArea, result, rowKey, rowKeys, v, label, value, sankey, sources, targets;
+        let colKey, colKeys, data, defaults, j, k, layout, len, len1, renderArea, result, rowKey, rowKeys, v, label, value, sankey, sources, targets, rowData;
         defaults = {
           localeStrings: {
             vs: "на",
@@ -222,7 +222,7 @@
             String(item);
             labelKeys[`${item}`] = true;
           }
-          let rowData = Object.keys(labelKeys);
+          rowData = Object.keys(labelKeys);
           for (let item of labelItem) {
             item = item.slice(0, 2);
             sources.push(rowData.indexOf(item[0]));
@@ -260,7 +260,135 @@
           title: pivotData.aggregatorName + ' на ' + pivotData.rowAttrs.join("-") + ' с ' + pivotData.colAttrs.join("-"),
           hovermode: 'closest',
           width: window.innerWidth / 1.3,
-          height: rowKeys.length * 500 - (rowKeys.length - 1 * 150),
+          height: rowKeys.length * 650 - ((rowKeys.length - 1) * 150),
+        };
+        renderArea = $("<div>", {
+          style: "display:none;"
+        }).appendTo($("body"));
+        result = $("<div>").appendTo(renderArea);
+        Plotly.newPlot(result[0], data, $.extend(layout, opts.plotly), opts.plotlyConfig);
+        result.detach();
+        renderArea.remove();
+        return result;
+      };
+    };
+    makePlotlySankeyFlowChart = function () {
+      return function (pivotData, opts) {
+        let colKey, colKeys, data, defaults, j, k, layout, len, len1, renderArea, result, rowKey, rowKeys, v, label, value, sankey, sources, targets, rowData, labelKeys, labelArray, labelItem;
+        defaults = {
+          localeStrings: {
+            vs: "на",
+            by: "с"
+          },
+          plotly: {},
+          plotlyConfig: {
+            toImageButtonOptions: {
+              format: 'png', // one of png, svg, jpeg, webp
+              filename: 'Диаграмма_Санкей',
+              scale: 1 // Multiply title/legend/axis/canvas sizes by this factor
+            },
+            modeBarButtonsToRemove: ['lasso', 'select'],
+            locale: 'ru',
+            displaylogo: false
+          }
+        };
+        opts = $.extend(true, {}, defaults, opts);
+        rowKeys = pivotData.getRowKeys();
+        if (rowKeys.length === 0) {
+          rowKeys.push([]);
+        }
+        colKeys = pivotData.getColKeys();
+        if (colKeys.length === 0) {
+          colKeys.push([]);
+        }
+        data = [];
+        label = [];
+        sources = [];
+        targets = [];
+        labelKeys = {};
+        labelArray = [];
+        value = [];
+        for (let rowKey of rowKeys) {
+          for (let colKey of colKeys) {
+            for (let index in rowKey) {
+              label.push(rowKey[index])
+            }
+            for (let colItem of colKey) {
+              label.push(colItem)
+            }
+            for (item of label) {
+              labelKeys[`${item}`] = true
+            }
+            value.push(pivotData.getAggregator(rowKey, colKey).value());
+            labelArray.push(label)
+            label = []
+          }
+        }
+
+        rowData = Object.keys(labelKeys);
+        labelItem = [];
+        for (let index = 0; index < labelArray.length; index++) {
+          let item = labelArray[index];
+          let val = value[index];
+          for (let index = 0; index < item.length; index++) {
+            let itemData = item.slice(index, index + 2);
+            if (itemData.length == 2) {
+              itemData.push(val);
+              labelItem.push(itemData);
+            }
+          }
+        }
+        const values = {};
+        const separator = '=>';
+        labelItem.forEach(item => {
+          const key = item[0] + separator + item[1];
+          if (values[key] === undefined) {
+            values[key] = item[2];
+            return;
+          };
+          values[key] += item[2];
+        });
+        labelItem = Object.entries(values).map(item => {
+          const s = item[0].split(separator);
+          return [...s, item[1]];
+        });
+        for (let item of labelItem) {
+          item = item.slice(0, 2);
+          sources.push(rowData.indexOf(item[0]));
+          targets.push(rowData.indexOf(item[1]));
+        }
+        value = [];
+        for (let item of labelItem) {
+          value.push(item[2]);
+        }
+        sankey = {
+          orientation: "h",
+          node: {
+            pad: 15,
+            thickness: 30,
+            line: {
+              color: "black",
+              width: 0.5
+            },
+            label: rowData, // элементы (Male, Conservative, Quentin, 20)
+          },
+          link: {
+            source: sources, // фром(индекс элемента)
+            target: targets, // ту(индекс элемента)
+            value: value   // валью(значение аггрегатора)
+          },
+
+          xaxis: `x`,
+          yaxis: `y`,
+
+          type: 'sankey',
+        }
+        data.push(sankey);
+        layout = {
+          title: pivotData.aggregatorName + ' на ' + pivotData.rowAttrs.join("-") + ' с ' + pivotData.colAttrs.join("-"),
+          hovermode: 'closest',
+          width: window.innerWidth / 1.3,
+          height: 650,
         };
         renderArea = $("<div>", {
           style: "display:none;"
@@ -299,8 +427,8 @@
       "Диаграмма с областями": makePlotlyChart({
         stackgroup: 1
       }),
-
       "Диаграмма Санкей": makePlotlySankeyChart(),
+      "Диаграмма Санкей Флоу": makePlotlySankeyFlowChart(),
       'Множественная круговая диаграмма': makePlotlyChart({
         type: 'pie',
         scalegroup: 1,
