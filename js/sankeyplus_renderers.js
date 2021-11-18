@@ -158,11 +158,11 @@
         rowKeys = pivotData.getRowKeys();
         if (rowKeys.length === 0) {
           rowKeys.push([]);
-        }
+        };
         colKeys = pivotData.getColKeys();
         if (colKeys.length === 0) {
           colKeys.push([]);
-        }
+        };
         data = [];
         label = [];
         sources = [];
@@ -184,10 +184,10 @@
             for (let colItem of colKey) {
               labelItem.push(colItem);
               label.push(colItem);
-            }
+            };
             labelArray.push(labelItem);
             value.push(pivotData.getAggregator(rowKey, colKey).value());
-          }
+          };
           labelItem = [];
           for (let index = 0; index < labelArray.length; index++) {
             let item = labelArray[index];
@@ -197,9 +197,9 @@
               if (itemData.length == 2) {
                 itemData.push(val);
                 labelItem.push(itemData);
-              }
-            }
-          }
+              };
+            };
+          };
           const values = {};
           const separator = '=>';
           labelItem.forEach(item => {
@@ -217,17 +217,17 @@
           value = [];
           for (let item of labelItem) {
             value.push(item[2]);
-          }
+          };
           for (let item of label) {
             String(item);
             labelKeys[`${item}`] = true;
-          }
+          };
           rowData = Object.keys(labelKeys);
           for (let item of labelItem) {
             item = item.slice(0, 2);
             sources.push(rowData.indexOf(item[0]));
             targets.push(rowData.indexOf(item[1]));
-          }
+          };
           sankey = {
             orientation: "h",
             node: {
@@ -252,10 +252,12 @@
             yaxis: `y${i}`,
 
             type: 'sankey',
-          }
+          };
+          sources = [];
+          targets = [];
           data.push(sankey);
           label = [];
-        }
+        };
         layout = {
           title: pivotData.aggregatorName + ' на ' + pivotData.rowAttrs.join("-") + ' с ' + pivotData.colAttrs.join("-"),
           hovermode: 'closest',
@@ -296,11 +298,11 @@
         rowKeys = pivotData.getRowKeys();
         if (rowKeys.length === 0) {
           rowKeys.push([]);
-        }
+        };
         colKeys = pivotData.getColKeys();
         if (colKeys.length === 0) {
           colKeys.push([]);
-        }
+        };
         data = [];
         label = [];
         sources = [];
@@ -311,20 +313,19 @@
         for (let rowKey of rowKeys) {
           for (let colKey of colKeys) {
             for (let index in rowKey) {
-              label.push(rowKey[index])
-            }
+              label.push(rowKey[index]);
+            };
             for (let colItem of colKey) {
-              label.push(colItem)
-            }
+              label.push(colItem);
+            };
             for (item of label) {
-              labelKeys[`${item}`] = true
-            }
+              labelKeys[`${item}`] = true;
+            };
             value.push(pivotData.getAggregator(rowKey, colKey).value());
-            labelArray.push(label)
-            label = []
-          }
-        }
-
+            labelArray.push(label);
+            label = [];
+          };
+        };
         rowData = Object.keys(labelKeys);
         labelItem = [];
         for (let index = 0; index < labelArray.length; index++) {
@@ -335,9 +336,9 @@
             if (itemData.length == 2) {
               itemData.push(val);
               labelItem.push(itemData);
-            }
-          }
-        }
+            };
+          };
+        };
         const values = {};
         const separator = '=>';
         labelItem.forEach(item => {
@@ -356,11 +357,11 @@
           item = item.slice(0, 2);
           sources.push(rowData.indexOf(item[0]));
           targets.push(rowData.indexOf(item[1]));
-        }
+        };
         value = [];
         for (let item of labelItem) {
           value.push(item[2]);
-        }
+        };
         sankey = {
           orientation: "h",
           node: {
@@ -382,7 +383,7 @@
           yaxis: `y`,
 
           type: 'sankey',
-        }
+        };
         data.push(sankey);
         layout = {
           title: pivotData.aggregatorName + ' на ' + pivotData.rowAttrs.join("-") + ' с ' + pivotData.colAttrs.join("-"),
