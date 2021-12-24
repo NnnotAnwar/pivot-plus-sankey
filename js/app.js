@@ -8,6 +8,7 @@ $(function () {
             renderers: renderers,
             rows: ['Gender'],
             cols: ['Age Bin', "Party", "Province"],
+            rendererName: 'Диаграмма Санкей',
             derivedAttributes: {
                 "Age Bin": $.pivotUtilities.derivers.bin("Age", 10)
             },
